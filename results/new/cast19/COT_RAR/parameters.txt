@@ -5,5 +5,5 @@
     "work_dir": "./results/new/cast19/COT_RAR",
     "n_generation": 5,
     "seed": 7,
-    "open_ai_key_id": 1
+    "open_ai_key_id": 0
 }

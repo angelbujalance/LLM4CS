@@ -10,7 +10,7 @@
 #SBATCH --error=output/error/out-RAR_prompting_CoT_%x.%A.err
 
 python chat_prompt_cot_rewrite_and_response.py \
---open_ai_key_id=1 \
+--open_ai_key_id=0 \
 --qrel_file_path="./datasets/cast19_qrel.tsv" \
 --test_file_path="./datasets/cast19_test.json" \
 --demo_file_path="./demonstrations.json" \
