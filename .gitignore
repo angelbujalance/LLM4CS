@@ -1,1 +1,8 @@
 output/
+.cache/
+*.h5
+*.onnx
+*.bin
+*.safetensors
+
+
