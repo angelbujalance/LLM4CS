@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu
+#SBATCH --gpus=1
+#SBATCH --job-name=InstallEnv2
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=18
+#SBATCH --time=01:00:00
+#SBATCH --output=output/success/out-%x.%A.out
+#SBATCH --error=output/error/out-%x.%A.err
+
+module purge
+module load 2022
+module load Anaconda3/2022.05
+
+# Go to the directory that contains the conda env file and install it
+cd $HOME/LLM4CS/
+
+conda create -n llmcs2 python=3.8 -y
+
+source activate llmcs2
+
+# Install all other dependencies except PyTorch
+pip install -r requirements2.txt --no-deps
+
+# Install PyTorch separately
+# Use the correct installation command based on your system configuration
+pip install torch==1.12.0+cu113 torchvision==0.13.0+cu113 torchaudio==0.12.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
