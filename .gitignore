@@ -7,3 +7,6 @@ output/
 
 
 venv/
+
+__pycache__/
+*.sh
