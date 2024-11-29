@@ -1,10 +1,10 @@
 {
     "test_file_path": "./datasets/cast19_test.json",
-    "rewrite_file_path": "./results/new/cast19/REW/rewrites.jsonl",
     "demo_file_path": "./demonstrations.json",
     "qrel_file_path": "./datasets/cast19_qrel.tsv",
-    "work_dir": "./results/new/cast19/RTR",
+    "work_dir": "./results/mistral/cast19/REW",
     "n_generation": 5,
     "seed": 7,
-    "open_ai_key_id": 0
+    "open_ai_key_id": 0,
+    "model_prompt": "mistral"
 }
