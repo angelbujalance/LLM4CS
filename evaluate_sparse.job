@@ -29,9 +29,20 @@ AGGREGATION_METHOD="mean"  # Choose aggregation method: maxprob, mean
 
 # For the new evaluation you have to have a trec file
 
-RUN_PATH="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/run.msmarco-passage.bm25tuned.trec" # Path to the run file
-EVAL_OUTPUT="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/eval_results.trec" # File to save evaluation results
-QREL_PATH="datasets/cast19_qrel.trec"  # Path to QRELs file
+# RUN_PATH="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/run.msmarco-passage.bm25tuned.trec"
+# RUN_PATH="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/run.msmarco-passage.bm25tuned.trec" # Path to the run file
+# EVAL_OUTPUT="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/eval_results.trec" # File to save evaluation results
+# QREL_PATH="datasets/cast19_qrel.trec"  # Path to QRELs file
+
+
+
+QREL_PATH="datasets/new_cast19_qrel.trec"
+EVAL_OUTPUT="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/FULL.eval_results.trec" # File to save evaluation results
+RUN_PATH="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/FULL.bm25tuned.trec"
+
+
+
+# RUN_PATH="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/new_run.msmarco-passage.bm25tuned.trec"
 
 # Ensure the output directory exists
 mkdir -p $(dirname "$EVAL_OUTPUT")
