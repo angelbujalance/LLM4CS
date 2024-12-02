@@ -1,0 +1,46 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu
+#SBATCH --gpus=1
+#SBATCH --job-name=A-trec-sparse-retrieval
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=18
+#SBATCH --time=06:30:00
+#SBATCH --output=$HOME/output/success/out-%x.%A.out
+#SBATCH --error=$HOME/output/error/out-%x.%A.err
+
+module purge
+module load 2022
+module load Anaconda3/2022.05
+
+export JAVA_HOME=$HOME/java/jdk-21
+export PATH=$JAVA_HOME/bin:$PATH
+
+cd $HOME/LLM4CS/
+source activate pyserini
+
+echo "Starting the retrieval"
+mkdir -p results/cast19/sparse
+
+PROMPTING_METHOD="RAR" # Choose prompting method= REW, RAR, RTR (FOR NOW ONLY TESTING WITH REW)
+AGGREGATION_METHOD="mean"  # Choose aggregation method: maxprob, mean,
+
+INDEX="/scratch-shared/sparse_llm4cs/sparse_indexed_ms_marco"
+# this is after you have concatenated them to generate a topics file see topics.sparse.job
+TOPICS="results/new/cast19/${PROMPTING_METHOD}/topics_${AGGREGATION_METHOD}.msmarco-passage.dev-subset.tsv" # REW, RAR, OR RTR
+OUTPUT="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/run.msmarco-passage.bm25tuned.trec"
+
+# #TEST
+# TOPICS="results/new/cast19/REW/test.tsv" # REW, RAR, OR RTR
+# OUTPUT="results/cast19/sparse/run.test.bm25tuned.txt"
+
+python -m pyserini.search.lucene \
+  --index $INDEX \
+  --topics $TOPICS \
+  --output $OUTPUT \
+  --hits 1000 \
+  --bm25 --k1 0.82 --b 0.68 \
+  --threads 4 --batch-size 16 
+
+
+echo "performed the retrieval"
