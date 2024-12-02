@@ -4,7 +4,31 @@ This is the repository for our EMNLP 2023 Findings paper:
 
 **Large Language Models Know Your Contextual Search Intent: A Prompting Framework for Conversational Search**
 
+## PYSERINI: Snellius Sparse
+Install environment to run pyserini:
+```bash
+install_env_for_pyserini.job
+```
 
+**Convert the qrel.tsv file to a trec file for later use**
+```bash
+qrels_to_trec.job
+```
+**If the topics are not created yet, aggregate the topics for all the combinantions:**
+REW/RTR/RAR + mean/maxprob
+```bash
+aggregate_topics_sparse.job
+```
+
+**After aggregating the topics you can use them when you retrieve**
+```bash
+retrieval_sparse.job
+```
+
+**After retrieving you can run the evaluation job to get the results**
+```bash
+evaluate_sparse.job
+```
 ## 🌏 Environment
 We conduct experiemnts in Python 3.8.13.
 
