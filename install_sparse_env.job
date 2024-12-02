@@ -1,0 +1,53 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu
+#SBATCH --gpus=1
+#SBATCH --job-name=InstallEnvironment
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=18
+#SBATCH --time=01:00:00
+#SBATCH --output=$HOME/output/success/out-%x.%A.out
+#SBATCH --error=$HOME/output/error/out-%x.%A.err
+
+# Create necessary directories for output
+mkdir -p $HOME/output/success $HOME/output/error
+
+# Load Anaconda and initialize conda
+module purge
+module load 2022
+module load Anaconda3/2022.05
+eval "$(conda shell.bash hook)"
+
+# Step 1: Create and activate a conda environment
+conda create -n pyserini python=3.10 -y
+conda activate pyserini
+
+# Install Python packages
+pip install --upgrade pip
+pip install pyserini numpy==1.26.4 lightgbm nmslib faiss-cpu
+pip install pytrec_eval
+
+echo "Create Java Directory."
+# Install OpenJDK locally
+mkdir -p $HOME/java
+cd $HOME/java
+wget https://download.java.net/openjdk/jdk21/ri/openjdk-21+35_linux-x64_bin.tar.gz
+tar -xzf openjdk-21+35_linux-x64_bin.tar.gz
+export JAVA_HOME=$HOME/java/jdk-21
+export PATH=$JAVA_HOME/bin:$PATH
+
+
+echo "Create Maven Directory."
+# Install Maven locally
+mkdir -p $HOME/maven
+cd $HOME/maven
+wget https://downloads.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
+tar -xzf apache-maven-3.8.4-bin.tar.gz
+export MAVEN_HOME=$HOME/maven/apache-maven-3.8.4
+export PATH=$MAVEN_HOME/bin:$PATH
+
+# Verify installation
+java -version
+mvn -version
+
+echo "Environment setup complete."
