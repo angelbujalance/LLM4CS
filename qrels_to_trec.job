@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu
+#SBATCH --gpus=1
+#SBATCH --job-name=qrels_to_trec
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --time=01:00:00
+#SBATCH --output=$HOME/output/success/aggregate-%x.%A.out
+#SBATCH --error=$HOME/output/error/aggregate-%x.%A.err
+
+module purge
+module load 2022
+module load Anaconda3/2022.05
+
+cd $HOME/LLM4CS/
+source activate pyserini
+
+
+# Paths
+INPUT="datasets/cast19_qrel.tsv"  
+OUTPUT="datasets/cast19_qrel.trec"
+# HAS TO BE A TSV FILE IN ORDER TO WORK
+
+# Step 1: Aggregate topics
+echo "Running convert_msmarco_to_trec_qrels"
+python convert_msmarco_to_trec_qrels.py \
+  --input $INPUT \
+  --output $OUTPUT \
+   
+
+
+echo "output file:${OUTPUT}"
