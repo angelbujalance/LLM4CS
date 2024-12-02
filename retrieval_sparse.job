@@ -27,7 +27,9 @@ AGGREGATION_METHOD="mean"  # Choose aggregation method: maxprob, mean,
 
 INDEX="/scratch-shared/sparse_llm4cs/sparse_indexed_ms_marco"
 # this is after you have concatenated them to generate a topics file see topics.sparse.job
-TOPICS="results/new/cast19/${PROMPTING_METHOD}/topics_${AGGREGATION_METHOD}.msmarco-passage.dev-subset.tsv" # REW, RAR, OR RTR
+TOPICS="results/new/cast19/${PROMPTING_METHOD}/topics_${AGGREGATION_METHOD}_${PROMPTING_METHOD}_sparse.msmarco-passage.dev-subset.tsv"
+
+# TOPICS="results/new/cast19/${PROMPTING_METHOD}/topics_${AGGREGATION_METHOD}.msmarco-passage.dev-subset.tsv" # REW, RAR, OR RTR
 OUTPUT="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/run.msmarco-passage.bm25tuned.trec"
 
 # #TEST
