@@ -1,0 +1,57 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu
+#SBATCH --gpus=1
+#SBATCH --job-name=TRECEvaluateSparse
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=18
+#SBATCH --time=01:00:00
+#SBATCH --output=$HOME/output/success/out-%x.%A.out
+#SBATCH --error=$HOME/output/error/out-%x.%A.err
+
+# Load necessary modules (adjust based on your setup)
+module purge
+module load 2022
+module load Anaconda3/2022.05
+
+export JAVA_HOME=$HOME/java/jdk-21
+export PATH=$JAVA_HOME/bin:$PATH
+
+# Activate your environment
+source activate pyserini
+
+# Change to the directory where Pyserini is set up
+cd $HOME/LLM4CS/
+
+# Define variables for paths and settings
+PROMPTING_METHOD="RAR"  # Choose prompting method= REW, RAR, RTR (FOR NOW ONLY TESTING WITH REW)
+AGGREGATION_METHOD="mean"  # Choose aggregation method: maxprob, mean
+
+# For the new evaluation you have to have a trec file
+
+RUN_PATH="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/run.msmarco-passage.bm25tuned.trec" # Path to the run file
+EVAL_OUTPUT="results/cast19/sparse/${PROMPTING_METHOD}/${AGGREGATION_METHOD}/eval_results.trec" # File to save evaluation results
+QREL_PATH="datasets/cast19_qrel.trec"  # Path to QRELs file
+
+# Ensure the output directory exists
+mkdir -p $(dirname "$EVAL_OUTPUT")
+
+# Run the evaluation
+echo "Starting evaluation..."
+
+# Clear the output file first
+> $EVAL_OUTPUT
+
+# Run trec_eval for each metric individually and append to the output file
+python -m pyserini.eval.trec_eval -c -m map $QREL_PATH $RUN_PATH >> $EVAL_OUTPUT
+python -m pyserini.eval.trec_eval -c -m recip_rank $QREL_PATH $RUN_PATH >> $EVAL_OUTPUT
+python -m pyserini.eval.trec_eval -c -m ndcg_cut.3 $QREL_PATH $RUN_PATH >> $EVAL_OUTPUT
+python -m pyserini.eval.trec_eval -c -m recall.5 $QREL_PATH $RUN_PATH >> $EVAL_OUTPUT
+python -m pyserini.eval.trec_eval -c -m recall.10 $QREL_PATH $RUN_PATH >> $EVAL_OUTPUT
+python -m pyserini.eval.trec_eval -c -m recall.20 $QREL_PATH $RUN_PATH >> $EVAL_OUTPUT
+python -m pyserini.eval.trec_eval -c -m recall.100 $QREL_PATH $RUN_PATH >> $EVAL_OUTPUT
+
+echo "Evaluation completed. Results saved to $EVAL_OUTPUT"
+
+
+echo "Evaluation completed. Results saved to $EVAL_OUTPUT"
