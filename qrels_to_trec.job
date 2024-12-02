@@ -18,9 +18,14 @@ source activate pyserini
 
 
 # Paths
-INPUT="datasets/cast19_qrel.tsv"  
-OUTPUT="datasets/cast19_qrel.trec"
+# INPUT="datasets/cast19_qrel.tsv"  
+# OUTPUT="datasets/cast19_qrel.trec"
+
+# New PATHS
 # HAS TO BE A TSV FILE IN ORDER TO WORK
+
+INPUT="/scratch-shared/sparse_llm4cs/2019_rowid_qrel.tsv"  
+OUTPUT="datasets/new_cast19_qrel.trec"
 
 # Step 1: Aggregate topics
 echo "Running convert_msmarco_to_trec_qrels"
