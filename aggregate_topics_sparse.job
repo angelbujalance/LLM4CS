@@ -2,7 +2,7 @@
 
 #SBATCH --partition=gpu
 #SBATCH --gpus=1
-#SBATCH --job-name=aggregate-topics
+#SBATCH --job-name=AAA_aggregate-topics
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=01:00:00
@@ -17,12 +17,11 @@ cd $HOME/LLM4CS/
 source activate pyserini
 
 PROMPTING_METHOD="RAR" # Choose prompting method= REW, RAR, RTR (FOR NOW ONLY TESTING WITH REW)
-AGGREGATION_METHOD="mean"  # Choose aggregation method: maxprob, mean
+AGGREGATION_METHOD="mean"  # Choose aggregation method: maxprob, mean, sc 
 
 
 # Paths
  INPUT="results/new/cast19/${PROMPTING_METHOD}/rewrites.jsonl"  # Input file with REW
-
 
 OUTPUT="results/new/cast19/${PROMPTING_METHOD}/topics_${AGGREGATION_METHOD}_${PROMPTING_METHOD}_sparse.msmarco-passage.dev-subset.tsv"
 # HAS TO BE A TSV FILE IN ORDER TO WORK
