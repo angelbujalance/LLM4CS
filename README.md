@@ -4,7 +4,7 @@ This is the repository for our EMNLP 2023 Findings paper:
 
 **Large Language Models Know Your Contextual Search Intent: A Prompting Framework for Conversational Search**
 
-## PYSERINI: Snellius Sparse
+## SPARSE RETRIEVAL
 Install environment to run pyserini:
 ```bash
 install_env_for_pyserini.job
