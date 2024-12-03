@@ -33,8 +33,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Execute the eval_dense_retrieval script
-    # script_path = "eval_dense_retrieval.py"
-    script_path = "eval_dense_retrieval_v2.py"
+    script_path = "eval_dense_retrieval.py"
+    # script_path = "eval_dense_retrieval_v2.py"
     with open(script_path, "r") as script_file:
         code = script_file.read()
     exec(code, globals())
