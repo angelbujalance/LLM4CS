@@ -33,11 +33,11 @@ def build_faiss_index(args):
     gpu_resources = []
     tempmem = -1
 
-    for i in range(ngpu):
-        res = faiss.StandardGpuResources()
-        if tempmem >= 0:
-            res.setTempMemory(tempmem)
-        gpu_resources.append(res)
+    # for i in range(ngpu):
+    #     res = faiss.StandardGpuResources()
+    #     if tempmem >= 0:
+    #         res.setTempMemory(tempmem)
+    #     gpu_resources.append(res)
 
     cpu_index = faiss.IndexFlatIP(768)  
     index = None
@@ -244,23 +244,29 @@ def faiss_flat_retrieval_one_by_one_and_finally_merge(args, query_embs):
     merged_candidate_matrix = None
     
     # Automaticall get the number of doc blocks
-    args.num_doc_block = 1
+    args.num_doc_block = 0
     for filename in os.listdir(args.index_path):
         try:
-            args.num_doc_block = max(args.num_doc_block, int(filename.split(".")[1]))
-        except:
+            # Extract block ID from filenames like "passage_emb_block_0.pb"
+            if "passage_emb_block" in filename:
+                block_id = int(filename.split("_")[-1].split(".")[0])  # Extract the numeric par
+                args.num_doc_block = max(args.num_doc_block, block_id + 1)
+        except (ValueError, IndexError) as e:
+            logger.warning(f"Error parsing block ID from filename '{filename}': {e}")
             continue
-    args.num_doc_block += 1
-    print("Automatically detect that the number of doc blocks is: {}".format(args.num_doc_block))
-    
+    logger.info(f"Automatically detect that the number of doc blocks is: {args.num_doc_block}")
+    logger.info(f"Files in {args.index_path}: {os.listdir(args.index_path)}")
+
     for block_id in range(args.num_doc_block):
         logger.info("Loading doc block " + str(block_id))
 
         # load doc embeddings
-        with open(os.path.join(args.index_path, "doc_emb_block.{}.pb".format(block_id)), 'rb') as handle:
+        with open(os.path.join(args.index_path, f"passage_emb_block_{block_id}.pb"), 'rb') as handle:
             cur_doc_embs = pickle.load(handle)
-        with open(os.path.join(args.index_path, "doc_embid_block.{}.pb".format(block_id)), 'rb') as handle:
+            assert cur_doc_embs is not None, f"cur_doc_embs is None for block {block_id}"
+        with open(os.path.join(args.index_path, f"passage_embid_block_{block_id}.pb"), 'rb') as handle:
             cur_eid2did = pickle.load(handle)
+            assert cur_eid2did is not None, f"cur_eid2did is None for block {block_id}"
             if isinstance(cur_eid2did, list):
                 cur_eid2did = np.array(cur_eid2did)
 

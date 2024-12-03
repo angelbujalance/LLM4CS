@@ -2,10 +2,10 @@
 
 #SBATCH --partition=gpu
 #SBATCH --gpus=1
-#SBATCH --job-name=Evaluation_llmcs2_msmarco_new_embs_org
+#SBATCH --job-name=Evaluation_llmcs2_final
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=18
-#SBATCH --time=01:00:00
+#SBATCH --time=03:00:00
 #SBATCH --output=output/success/out-eval_dense_%x.%A.out
 #SBATCH --error=output/error/out-eval_dense_%x.%A.err
 
@@ -28,8 +28,10 @@ eval_field_name="predicted_rewrite"
 work_dir="../results/new/cast19/REW"    # set your the folder containing your `rewrites.jsonl`file
 
 eval_file_path="$work_dir/rewrites.jsonl" 
-index_path="/scratch-shared/llm4cs/new_embeddings/" # set the pre-built index which contains all candidate passage emebddings. 
-qrel_file_path="../datasets/cast19_qrel.tsv" # set the qrel file path
+# index_path="/scratch-shared/llm4cs/new_embeddings/" # set the pre-built index which contains all candidate passage emebddings from ConvDR. 
+index_path="/scratch-shared/dense_llm4cs/embeds"                                               
+# qrel_file_path="../datasets/cast19_qrel.tsv" # set the qrel file path
+qrel_file_path="/scratch-shared/dense_llm4cs/cast19_qrel.tsv"
 retrieval_output_path="$work_dir/ance/+q+r+sc" # set your expected output folder path
 
 #----------(disabled)-----------------------------------
