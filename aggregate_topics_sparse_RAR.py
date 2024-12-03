@@ -22,7 +22,7 @@ def aggregate_topics(input_file, output_file, aggregation_method, qrel_file=None
 
             # Apply aggregation based on the method
             if aggregation_method == "maxprob":
-                aggregated_query = rewrite[0].replace("\n", " ")   
+                aggregated_query = rewrites[0].replace("\n", " ")   
                 aggregated_response = responses[0].replace("\n", " ")         
                 aggregated_text = f"{aggregated_query} {aggregated_response}"
             elif aggregation_method == "mean":
