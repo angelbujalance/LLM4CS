@@ -6,7 +6,9 @@ import argparse
 from tqdm import tqdm, trange
 from chat_promptor import OneShotRewriteThenResponsePrompter
 from generator import ChatGenerator, OPENAI_KEYS
+from generator_hf import ChatGenerator as ChatGeneratorHF
 from utils import set_seed, get_finished_sample_ids, get_has_qrel_label_sample_ids
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 def get_args():
@@ -19,7 +21,7 @@ def get_args():
     parser.add_argument("--n_generation", type=int, required=True, help='the number for generation')
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--open_ai_key_id", type=int, choices=[0,1,2,3,4,5], required=True)
-    
+    parser.add_argument("--model_prompt", type=str, choices=['openai', 'llama', 'mistral'], default="openai")
     
     
     args = parser.parse_args()
@@ -37,10 +39,20 @@ def main():
     
     # model and promptor setting
     promptor = OneShotRewriteThenResponsePrompter()
-    model_kwargs = {"temperature": 0.7, "max_tokens": 256, "stop": promptor.stop_tokens}
-    api_key = OPENAI_KEYS[args.open_ai_key_id]
-    generator = ChatGenerator(api_key, args.n_generation, **model_kwargs)
-    
+    if args.model_prompt == 'openai':
+        print("---openai is being used---")
+        api_key = OPENAI_KEYS[args.open_ai_key_id]
+        model_kwargs = {"temperature": 0.7, "max_tokens": 256, "stop": promptor.stop_tokens}
+        generator = ChatGenerator(api_key, args.n_generation, **model_kwargs)
+    if args.model_prompt == 'llama':
+        model_id = "meta-llama/Meta-Llama-3.1-70B-Instruct"
+    if args.model_prompt == 'mistral':
+        print("---mistral is being used---")
+        model_id = "mistralai/Mistral-7B-Instruct-v0.1" #v0.3 // 3.1-Llama-instruct 0.3
+        model_id = "meta-llama/Llama-3.1-8B-Instruct"
+        tokenizer = AutoTokenizer.from_pretrained(model_id, token='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')
+        model_kwargs = {"temperature": 0.7, "max_new_tokens": 256}
+        generator = ChatGeneratorHF(args.n_generation, model_id, tokenizer, **model_kwargs)
     
     # test_dataset    
     output_file_path = os.path.join(args.work_dir, "rewrites.jsonl")
@@ -56,7 +68,10 @@ def main():
         for line in f:
             line = json.loads(line)
             sample_id = line['sample_id']
-            rewrite = line['predicted_rewrite'][0]
+            try:
+                rewrite = line['predicted_rewrite'][0]
+            except (IndexError, TypeError):
+                rewrite = ''
             d_rewrite[sample_id] = rewrite
         
         

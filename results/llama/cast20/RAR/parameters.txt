@@ -1,8 +1,8 @@
 {
     "test_file_path": "./datasets/cast20_test.json",
-    "demo_file_path": "./demonstrations.json",
     "qrel_file_path": "./datasets/cast20_qrel.tsv",
-    "work_dir": "./results/llama/cast20/REW",
+    "demo_file_path": "./demonstrations.json",
+    "work_dir": "./results/llama/cast20/RAR",
     "n_generation": 5,
     "seed": 7,
     "open_ai_key_id": 0,

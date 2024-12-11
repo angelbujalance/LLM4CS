@@ -48,7 +48,7 @@ class ChatGenerator:
         output = []
         n_try = 0
 
-        while n_try < 10:
+        while n_try < 5:
             
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
@@ -60,12 +60,16 @@ class ChatGenerator:
 
             tokenized_chat = self.tokenizer.apply_chat_template(messages, return_tensors="pt", truncation=True)
 
+            device = next(self.generator.parameters()).device
+            tokenized_chat = tokenized_chat.to(device)
+
             results = []
             for i in range(n_generation):
                 outputs = self.generator.generate(tokenized_chat, num_return_sequences=n_generation, do_sample=True,
                                                   eos_token_id=self.tokenizer.eos_token_id, pad_token_id=self.tokenizer.pad_token_id,
                                                   **self.kwargs)
                 result = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+                result = result.replace("\n", " ")
                 result = re.split(r'assistant', result)
                 results.append(result[-1])
 
@@ -83,14 +87,17 @@ class ChatGenerator:
                     n_try += 1
                     output = valid_results
 
-                    if n_try == 10:
+                    if n_try == 5:
                         result = self.tokenizer.decode(outputs[-1], skip_special_tokens=True)
                         print("a result:", result)
                         print("prompt", prompt)
                         print("results", parsed_results)
                         print("raw output:", outputs)
                         print(output)
-                        return valid_results
+                        if len(valid_results) > 0:
+                            return valid_results
+                        else:
+                            return None
 
                         #raise ValueError("Have tried 10 times but still only got unsuccessful outputs")
 

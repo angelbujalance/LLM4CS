@@ -1,8 +1,9 @@
 {
     "test_file_path": "./datasets/cast19_test.json",
-    "qrel_file_path": "./datasets/cast19_qrel.tsv",
+    "rewrite_file_path": "./results/llama/cast19/COT_REW/rewrites.jsonl",
     "demo_file_path": "./demonstrations.json",
-    "work_dir": "./results/llama/cast19/RAR",
+    "qrel_file_path": "./datasets/cast19_qrel.tsv",
+    "work_dir": "./results/llama/cast19/COT_RTR",
     "n_generation": 5,
     "seed": 7,
     "open_ai_key_id": 0,
