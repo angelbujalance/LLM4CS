@@ -6,7 +6,7 @@ import argparse
 from tqdm import tqdm, trange
 from chat_promptor import RewritePromptor
 from generator import ChatGenerator, OPENAI_KEYS
-from generator_hf import ChatGenerator as ChatGeneratorHF
+from generator_hf import ChatGenerator as ChatGeneratorHF, HF_KEY
 from utils import set_seed, get_finished_sample_ids, get_has_qrel_label_sample_ids
 import transformers
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -50,8 +50,7 @@ def main():
         print("---mistral is being used---")
         #model_id = "mistralai/Mistral-7B-Instruct-v0.1" #v0.3 // 3.1-Llama-instruct 0.3
         model_id = "meta-llama/Llama-3.1-8B-Instruct"
-        tokenizer = AutoTokenizer.from_pretrained(model_id, token='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')
-        #model = AutoModelForCausalLM.from_pretrained(model_id, token='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')
+        tokenizer = AutoTokenizer.from_pretrained(model_id, token=HF_KEY)
         model_kwargs = {"temperature": 0.7, "max_new_tokens": 64}
         generator = ChatGeneratorHF(args.n_generation, model_id, tokenizer, **model_kwargs)
 

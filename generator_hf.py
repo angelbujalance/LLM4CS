@@ -5,6 +5,8 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline, BitsAndBytesConfig
 import re
 
+HF_KEY = '' # your Hugging Face token key to access the models
+
 # from https://github.com/texttron/hyde/blob/main/src/hyde/generator.py
 class ChatGenerator:
     def __init__(self, 
